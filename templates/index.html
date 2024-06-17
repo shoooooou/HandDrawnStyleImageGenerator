@@ -35,10 +35,18 @@
     <script>
       document.getElementById("upload").addEventListener("click", function () {
         var button = this;
-        var loadingSpinner = document.getElementById("loading");
         button.disabled = true;
+
+        var loadingSpinner = document.getElementById("loading");
         loadingSpinner.style.display = "inline-block"; // ローディングスピナーを表示
+
         var text = document.getElementById("text").value;
+        if (!text) {
+          alert("お題を1文字以上20文字以内で入力してください");
+          button.disabled = false;
+          loadingSpinner.style.display = "none"; // ローディングスピナーを非表示
+          return;
+        }
         fetch("/generate", {
           method: "POST",
           headers: {
