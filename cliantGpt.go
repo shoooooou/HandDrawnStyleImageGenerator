@@ -20,9 +20,6 @@ func GenerateImage(prompt, size string) (string, error) {
 		panic("envFile not found or OPEN_AI_SECRET is empty")
 	}
 
-	fmt.Println("OPEN_AI_SECRET", os.Getenv("OPEN_AI_SECRET"))
-	fmt.Println("prompt", prompt)
-	fmt.Println("size", size)
 	response, err := client.R().
 		SetHeader("Authorization", "Bearer "+os.Getenv("OPEN_AI_SECRET")).
 		SetHeader("Content-Type", "application/json").

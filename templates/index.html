@@ -1,14 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello, Gin!</title>
-</head>
-<body>
-    <h1>{{.Title}}</h1>
-    <p>{{.Message}}</p>
-    <img src="{{.ImageURL}}" alt="Example Image">
-</body>
-</body>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&display=swap"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="main-container">
+      <h1>手書き風画像ジェネレータ</h1>
+      <p>
+        お題を入力して生成ボタンを押下するだけで手書き風の画像が生成されます。
+      </p>
+      <div class="input-container">
+        <input
+          type="text"
+          id="text"
+          maxlength="20"
+          placeholder="ex.勉強しているクマ"
+        />
+        <button id="upload">生成</button>
+      </div>
+      <div id="loading" class="loading-spinner"></div>
+      <div class="image-container">
+        <img id="image" src="{{.ImageURL}}" alt="loading failed" />
+      </div>
+    </div>
+    <script>
+      document.getElementById("upload").addEventListener("click", function () {
+        var button = this;
+        var loadingSpinner = document.getElementById("loading");
+        button.disabled = true;
+        loadingSpinner.style.display = "inline-block"; // ローディングスピナーを表示
+        var text = document.getElementById("text").value;
+        fetch("/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: text }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("image").src = data.imageUrl;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          })
+          .finally(() => {
+            button.disabled = false;
+            loadingSpinner.style.display = "none"; // ローディングスピナーを非表示
+          });
+      });
+    </script>
+  </body>
 </html>
